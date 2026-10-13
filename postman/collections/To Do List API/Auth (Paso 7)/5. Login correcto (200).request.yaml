@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "email": "{{email}}",
+      "password": "supersecreta"
+    }
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 200", () => pm.response.to.have.status(200));
+      const b=pm.response.json();
+      pm.test("trae accessToken",()=>pm.expect(b.accessToken).to.be.a("string"));
+      pm.collectionVariables.set("token",b.accessToken);
+    language: text/javascript
+order: 5000

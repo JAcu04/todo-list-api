@@ -2,6 +2,12 @@
 workspace:
   id: ba61f55f-7bde-43d1-85bc-cd102baae9dd
 
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/To Do List API: ae9b057b-53fd-4aad-a58e-f731679ac149
+
 # All resources in the `postman/` folder are automatically registered in Local View.
 # Point to additional files outside the `postman/` folder to register them individually. Example:
 #localResources:

@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/tasks"
+method: GET
+auth:
+  type: noauth
+scripts:
+  - type: beforeRequest
+    code: pm.collectionVariables.set("email","user"+Date.now()+"@test.com");
+    language: text/javascript
+  - type: afterResponse
+    code: pm.test("Status 401", () => pm.response.to.have.status(401));
+    language: text/javascript
+order: 1000

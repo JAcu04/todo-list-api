@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/api/tasks"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "title": "  Tarea desde Postman  ",
+      "description": "Paso 5"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status 201", () => pm.response.to.have.status(201));
+      const t=pm.response.json();
+      pm.test("title sin espacios",()=>pm.expect(t.title).to.eql("Tarea desde Postman"));
+      pm.collectionVariables.set("taskId",t.id);
+    language: text/javascript
+order: 1000
