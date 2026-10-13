@@ -1,0 +1,101 @@
+@baseUrl = http://localhost:3000/api
+
+### Health
+GET {{baseUrl}}/health
+
+### Ruta inexistente -> 404 JSON
+GET {{baseUrl}}/nope
+
+### ---------- AUTH (Paso 7) ----------
+
+### Sin token -> 401
+GET {{baseUrl}}/tasks
+
+### Registrar usuario -> 201 (sin hash)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{ "email": "ana@test.com", "password": "supersecreta" }
+
+### Registrar de nuevo -> 409
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{ "email": "ana@test.com", "password": "supersecreta" }
+
+### Login con contrasena incorrecta -> 401
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "ana@test.com", "password": "incorrecta123" }
+
+### Login correcto -> 200 { accessToken }  (copia el accessToken en @token)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "ana@test.com", "password": "supersecreta" }
+
+### Pega aqui tu token
+@token = PEGA_AQUI_EL_ACCESS_TOKEN
+
+### Usuario del token -> 200
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### Token alterado -> 401
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}x
+
+### ---------- TASKS (todas con token) ----------
+
+### Listar tareas -> 200
+GET {{baseUrl}}/tasks
+Authorization: Bearer {{token}}
+
+### Crear tarea valida -> 201
+POST {{baseUrl}}/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "title": "  Tarea creada desde requests.http  ", "description": "Prueba del paso 5" }
+
+### Crear con title vacio -> 400 con details
+POST {{baseUrl}}/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "title": "" }
+
+### Obtener por id -> 200 (cambia el 1 por un id real)
+GET {{baseUrl}}/tasks/1
+Authorization: Bearer {{token}}
+
+### Obtener id inexistente -> 404
+GET {{baseUrl}}/tasks/999999
+Authorization: Bearer {{token}}
+
+### Obtener con id invalido -> 400
+GET {{baseUrl}}/tasks/abc
+Authorization: Bearer {{token}}
+
+### PATCH done -> 200
+PATCH {{baseUrl}}/tasks/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "done": true }
+
+### PATCH vacio -> 400
+PATCH {{baseUrl}}/tasks/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{}
+
+### DELETE -> 204 (cambia el id por uno que puedas borrar)
+DELETE {{baseUrl}}/tasks/1
+Authorization: Bearer {{token}}
+
+### DELETE otra vez -> 404
+DELETE {{baseUrl}}/tasks/1
+Authorization: Bearer {{token}}

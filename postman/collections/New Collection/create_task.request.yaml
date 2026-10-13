@@ -1,0 +1,11 @@
+$kind: http-request
+url: http://localhost:3000/api/tasks
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"title\":\"creado desde postman\"\r
+
+    }"
+order: 1791488237588
